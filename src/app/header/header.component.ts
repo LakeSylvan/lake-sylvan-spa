@@ -30,7 +30,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getMessage();
+    // this.getMessage();
   }
 
   getHeaderImageForSeason(now: Date): string {
