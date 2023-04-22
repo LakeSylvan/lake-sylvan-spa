@@ -1,0 +1,58 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+
+.slide-show {
+    position: relative;
+}
+
+.slide-holder{
+    position: relative;
+}
+
+.slide {
+    position : absolute;
+    overflow: hidden;
+    border-radius: 25px;
+    border: 5px solid rgb(70, 116, 193);
+    border-top: 15px;
+    border-bottom: 20px;
+}
+
+.slide > img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+    margin-bottom: -4px;
+}
+.controls{
+    max-width: 500px;
+    width: 100%;
+    padding-top: "-100px";
+}
+
+.buttonLeft{
+    position : relative;
+    padding-left: 35%;
+    bottom: 0;
+}
+
+.buttonCenter{
+    position : relative;
+    padding-left: 5%;
+}
+
+.burronRight{
+    position : relative;
+    padding-left: 5%;
+}
+
+#sizeImage{
+    opacity: .01;
+}
+
+.slider{
+    max-width: 500px;
+    width: 90%;
+    height: auto;
+}
