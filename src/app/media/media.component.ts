@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 
 @Component({
   selector: 'media',
@@ -12,8 +12,16 @@ export class MediaComponent implements OnInit {
   displayImageUrl : String | undefined;
 
   constructor() {}
+  isMobile: boolean | undefined
 
-  ngOnInit() {}
+  ngOnInit() {
+      this.isMobile = window.innerWidth < 780;
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth < 780;
+  }
 
   selectCamara(index: string) : void {
     if(index != '4') {
@@ -22,7 +30,6 @@ export class MediaComponent implements OnInit {
       this.displayImageUrl = undefined;
       this.displayImageUrl = this.BASE_URL + index;
     }
-
   }
 
 }
