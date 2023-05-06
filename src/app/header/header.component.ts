@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import AWS from 'aws-sdk'
+import { LakeHealthService } from '../services/lake-health.service';
+import { WaterQualityResult } from '../models/waterQualityResult';
 // import * as AWS from 'aws-sdk';
 // var AWS = require('aws-sdk');
 AWS.config.update({
@@ -21,7 +23,7 @@ export class HeaderComponent implements OnInit {
   message: string | undefined;
   isWarning: boolean | undefined;
 
-  constructor() {
+  constructor( private lakeHealthService: LakeHealthService ) {
     this.header = {
       url: 'assets/images/header.JPG',
       display: true,
@@ -30,7 +32,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.getMessage();
+    this.getMessage();
   }
 
   getHeaderImageForSeason(now: Date): string {
@@ -54,44 +56,83 @@ export class HeaderComponent implements OnInit {
     return imagePath;
   }
 
-  saveMessage(message: string, isWarning: boolean): void{
-    var updateParams = {
-      "TableName": "LS.Message",
-      "Key": {
-          "MessageId": { "S": "001"}
-      },
-      "UpdateExpression": "SET #T = :t, #W = :w",
-      "ExpressionAttributeNames": {
-          "#T": "Text",
-          "#W": "WarningInd"
-      },
-      "ExpressionAttributeValues": {
-          ":t": { "S": message},
-          ":w": { "BOOL": isWarning}
-      }
-    };
-    this.dynamodb.updateItem(updateParams).promise()
-    .then((results) => {
-      //Return a message to the user???
-    })
-    .catch();
-  }
+  // saveMessage(message: string, isWarning: boolean): void{
+  //   var updateParams = {
+  //     "TableName": "LS.Message",
+  //     "Key": {
+  //         "MessageId": { "S": "001"}
+  //     },
+  //     "UpdateExpression": "SET #T = :t, #W = :w",
+  //     "ExpressionAttributeNames": {
+  //         "#T": "Text",
+  //         "#W": "WarningInd"
+  //     },
+  //     "ExpressionAttributeValues": {
+  //         ":t": { "S": message},
+  //         ":w": { "BOOL": isWarning}
+  //     }
+  //   };
+  //   this.dynamodb.updateItem(updateParams).promise()
+  //   .then((results) => {
+  //     //Return a message to the user???
+  //   })
+  //   .catch();
+  // }
 
   getMessage(): void {
-    var getItemParams = {
-      "TableName": "LS.Message",
-      "Key": {
-          "MessageId": {
-              "S": "001"
+    // var getItemParams = {
+    //   "TableName": "LS.Message",
+    //   "Key": {
+    //       "MessageId": {
+    //           "S": "001"
+    //       }
+    //   },
+    // };
+    // this.dynamodb.getItem(getItemParams).promise()
+    // .then((results: any) => {
+    //   this.setMessage(results.Item.Text.S);
+    //   this.setIsWarning(results.Item.WarningInd.BOOL)
+    // })
+    // .catch();
+    if (this.isLakeSession()) {
+      this.lakeHealthService.getLakeHealthData().subscribe((data: WaterQualityResult[]) => {
+        let lastTwoMCValues = this.getLastTwoMCValues(data);
+        const isLastMCTooHigh = lastTwoMCValues[0].MC >= 8
+        const isSecondToLastMCTooHigh = lastTwoMCValues[1].MC >= 8
+
+        if (isLastMCTooHigh){
+          this.setIsWarning(true);
+          const message = `The most recent test of MC on ${lastTwoMCValues[0].date} showed the MC to be ${lastTwoMCValues[0].MC} Ug/L which is over the unsafe range starting at 8 Ug/L.  The lake is not safe for use`
+          this.setMessage(message)
+        } else if (isSecondToLastMCTooHigh) {
+          const currentDate = new Date();
+          const testDate = new Date(lastTwoMCValues[0].date);
+          var difference = currentDate. getTime() - testDate. getTime();
+          var differenceInDays = Math. ceil(difference / (1000 * 3600 * 24));
+          if (differenceInDays < 15) {
+            const message = `The most recent test of MC on ${lastTwoMCValues[0].date} showed the MC to be ${lastTwoMCValues[0].MC} Ug/L which is in the safe range being under 8 Ug/L.  The lake is safe for use`
+            this.setIsWarning(false);
+            this.setMessage(message)
           }
-      },
-    };
-    this.dynamodb.getItem(getItemParams).promise()
-    .then((results: any) => {
-      this.setMessage(results.Item.Text.S);
-      this.setIsWarning(results.Item.WarningInd.BOOL)
-    })
-    .catch();
+        }
+      });
+    }
+  }
+
+  isLakeSession(): boolean {
+    const currentDate = new Date;
+    const lakeMonths = [3,4,5,6,7,8,9]
+    return lakeMonths.includes(currentDate.getUTCMonth())
+  }
+
+  getLastTwoMCValues(data: WaterQualityResult[]): WaterQualityResult[] {
+    let pastTwoValues: WaterQualityResult[]= []
+      data.forEach(waterQualityResult => {
+        if (waterQualityResult.MC && pastTwoValues.length !== 2) {
+          pastTwoValues.push(waterQualityResult);
+        }
+      });
+    return pastTwoValues
   }
 
   setMessage(inMessage: string): void{
