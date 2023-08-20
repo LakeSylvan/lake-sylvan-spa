@@ -8,11 +8,11 @@
 	<ng-container matColumnDef="expandedDetail">
 		<td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
 			<div class="example-element-detail" *ngIf="element.waterQualityResultDetail?.data.length" [@detailExpand]="element == expandedElement ? 'expanded' : 'collapsed'">
-				<div class="inner-table mat-elevation-z8" *ngIf="expandedElement">
+				<div class="inner-table mat-elevation-z8" *ngIf="expandedElement === element">
           <!-- <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target)" placeholder="Filter">
           </mat-form-field> -->
-          <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.waterQualityResultDetail" matSort>
+          <table #innerTables mat-table #innerSort="matSort" [dataSource]="element.waterQualityResultDetail" matSort style="background-color: rgb(201, 227, 235);">
             <ng-container matColumnDef="{{innerColumn}}" *ngFor="let innerColumn of innerDisplayedColumns">
               <th mat-header-cell *matHeaderCellDef mat-sort-header> {{innerColumn}} </th>
               <td mat-cell *matCellDef="let element"> {{element[innerColumn]}} </td>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import AWS from 'aws-sdk'
 import { LakeHealthService } from '../services/lake-health.service';
 import { WaterQualityResult } from '../models/waterQualityResult';
@@ -22,17 +22,26 @@ export class HeaderComponent implements OnInit {
   headerImage: string | undefined;
   message: string | undefined;
   isWarning: boolean | undefined;
+  isMobile: boolean | undefined;
 
   constructor( private lakeHealthService: LakeHealthService ) {
-    this.header = {
-      url: 'assets/images/header.JPG',
-      display: true,
-    };
     this.headerImage = this.getHeaderImageForSeason(new Date());
   }
 
   ngOnInit() {
+    this.isMobile = window.innerWidth < 780;
+    this.displayHeader()
     this.getMessage();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.isMobile = window.innerWidth < 780;
+    this.displayHeader();
+  }
+
+  displayHeader(): void {
+    this.header = this.isMobile ? 'assets/images/headerSmall.png' : 'assets/images/header.JPG'
   }
 
   getHeaderImageForSeason(now: Date): string {
