@@ -15,6 +15,9 @@ import { MediaComponent } from './media/media.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SlideShowComponent } from './slide-show/slide-show.component';
 import { LakeHealthComponent } from './lake-health/lake-health.component';
+import { BusinessesComponent } from './businesses/businesses.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -26,6 +29,7 @@ import { LakeHealthComponent } from './lake-health/lake-health.component';
     MediaComponent,
     SlideShowComponent,
     LakeHealthComponent,
+    BusinessesComponent,
   ],
   imports: [
     BrowserModule,
@@ -36,6 +40,8 @@ import { LakeHealthComponent } from './lake-health/lake-health.component';
     MatTabsModule,
     MatTableModule,
     BrowserAnimationsModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

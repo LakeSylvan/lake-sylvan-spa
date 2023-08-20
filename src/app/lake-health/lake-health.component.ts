@@ -27,18 +27,9 @@ export class LakeHealthComponent implements OnInit{
 
   dataSource: MatTableDataSource<WaterQualityResult> = new MatTableDataSource;
   waterQualityResultsData: WaterQualityResult[] = [];
-  columnsToDisplay = ['date', 'pH', 'temp', 'DO', 'MC'];
-  innerDisplayedColumns = ['depth', 'site', 'pH', 'temp', 'DO', 'MC'];
-  expandedElement: WaterQualityResult | null = {
-    date: new Date(),
-    depth: undefined,
-    site: undefined,
-    pH: 0,
-    temp: 0,
-    DO: 0,
-    MC: 0,
-    waterQualityResultDetail: []
-  };
+  columnsToDisplay = ['date', 'MC', 'pH', 'temp', 'DO'];
+  innerDisplayedColumns = ['depth', 'site', 'MC', 'pH', 'temp', 'DO'];
+  expandedElement: WaterQualityResult | null | undefined;
 
   constructor(
     private cd: ChangeDetectorRef,

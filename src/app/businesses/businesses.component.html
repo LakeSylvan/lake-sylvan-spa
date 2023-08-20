@@ -1,0 +1,40 @@
+
+
+<!-- angular icons https://jossef.github.io/material-design-icons-iconfont-->
+<mat-slide-toggle class="margin-bottom-15" (click)="onLakeOwnedToggle()" color="primary">Lake Owner Owned</mat-slide-toggle>
+  <!-- <div class="row"> -->
+  <!-- <div *ngFor="let business of displayBusinessesList" class="col-xs-12 col-md-6" style="margin-top:10px"> -->
+  <mat-accordion class="row">
+    <div fxFlexFill fxLayout="row">
+      <ng-container class="column" *ngFor="let business of displayBusinessesList">
+        <mat-expansion-panel (opened)="panelOpenState = true"
+                            (closed)="panelOpenState = false"
+                            class="{{isMobile ? 'mobileColumn' : 'column'}}"
+                            fxFlex>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div *ngIf="business.lakeOwned" class="margin-right-10"><img [src]='lakeLogoPath' class="width-10"></div>
+              {{business.name}}
+              <mat-icon class="margin-left-5" *ngIf="business.primaryIcon">{{business.primaryIcon}}</mat-icon>
+              <mat-icon *ngIf="business.secondaryIcon">{{business.secondaryIcon}}</mat-icon>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <div><mat-icon>label_outline</mat-icon> {{business.category}}</div>
+          <div *ngIf="business.website"><mat-icon>web</mat-icon> <a href="{{business.website}}">{{business.website}}</a></div>
+          <div *ngIf="business.phoneNumber"><mat-icon> phone</mat-icon> {{business.phoneNumber}}</div>
+          <div *ngIf="business.email"><mat-icon> email</mat-icon> {{business.email}}</div>
+          <div *ngIf="business.address"><mat-icon> location_on</mat-icon> {{business.address}}</div>
+          <div *ngIf="business.owner"><mat-icon>perm_identity</mat-icon> {{business.owner}}</div>
+          <div><mat-icon>info_outline</mat-icon> {{business.description}}</div>
+        </mat-expansion-panel>
+      </ng-container>
+    </div>
+  </mat-accordion>
+  <!-- </div> -->
+<!-- </div> -->
+<footer class="alert alert-secondary margin-top-20 margin-bottom-10">
+  <h2>Disclamer</h2>
+  <div>The LSPOA does not endorese or evaluate the products, services or companies nor any of the claims made by the service providers</div>
+</footer>
+<!-- Footer -->
+

@@ -11,7 +11,7 @@
 <div>
   <div class="controls">
       <img id="sizeImage" class="slider" [src]='images[0].src' [width]='imageWidth' [height]='imageHeight'/>
-      <a class="buttonLeft" hreg="#" (click)="prev(true)">
+      <a class="buttonLeft" hreg="#" (click)="next(true, false)">
           <img [src]='buttons.left' [width]='buttonWidth' [height]='buttonHeight' />
       </a>
       <a class="buttonCenter" hreg="#" (click)="next(true, true)" *ngIf='isShowStopped'>
@@ -20,7 +20,7 @@
       <a class="buttonCenter" hreg="#" (click)="stopCarousel()" *ngIf='!isShowStopped'>
           <img [src]='buttons.pause' [width]='buttonWidth' [height]='buttonHeight' />
       </a>
-      <a class="burronRight" hreg="#" (click)="next(true, false)">
+      <a class="burronRight" hreg="#" (click)="prev(true)">
           <img [src]='buttons.right' [width]='buttonWidth' [height]='buttonHeight' />
       </a>
   </div>
